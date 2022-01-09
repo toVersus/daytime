@@ -17,10 +17,9 @@ const SOCK_STREAM: c_int = 1_i32;
 
 fn main() {
     let arg = env::args().nth(1).unwrap();
-    let socket: io::RawFd = open_connect(
-        CString::new(arg).unwrap().as_ptr(),
-        CString::new("daytime").unwrap().as_ptr(),
-    );
+    let host = CString::new(arg).unwrap();
+    let service = CString::new("daytime").unwrap();
+    let socket: io::RawFd = open_connect(host.as_ptr(), service.as_ptr());
     let mut f: File = unsafe { io::FromRawFd::from_raw_fd(socket) };
     let mut contents = String::new();
     f.read_to_string(&mut contents)
